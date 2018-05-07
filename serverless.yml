@@ -42,14 +42,15 @@ custom:
           apis:
             custom:
               endpoint:
-                uri: arn:aws:lambda:eu-west-1:***REMOVED***:function:alexa-whats-on-production-whats-on
+                uri: >-
+                  arn:aws:lambda:eu-west-1:***REMOVED***:function:alexa-whats-on-production-whats-on
           manifestVersion: '1.0'
 
         models:
           en-GB:
             interactionModel:
               languageModel:
-                invocationName: hello
+                invocationName: whats on
                 intents:
                   - name: AMAZON.CancelIntent
                     samples: []

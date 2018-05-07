@@ -28,14 +28,14 @@ trait WhatsOnSpeechletComponent {
     def onIntent(requestEnvelope: SpeechletRequestEnvelope[IntentRequest]): SpeechletResponse = {
       val request = requestEnvelope.getRequest
       logger.info("onIntent requestId={}, sessionId={}", request.getRequestId, requestEnvelope.getSession.getSessionId)
-      val intent = request.getIntent
-      val intentName = if (intent != null) intent.getName else null
+      val intent = Option(request.getIntent)
+      val intentName = intent.map(_.getName)
 
-      intentName match {
+      intentName map {
         case "HelloWorldIntent"  => getHelloResponse
         case "AMAZON.HelpIntent" => getHelloResponse
         case _                   => askResponse("HelloWorld", "This is unsupported. Please try something else.")
-      }
+      } getOrElse askResponse("HelloWorld", "This is unsupported. Please try something else.")
 
     }
 
