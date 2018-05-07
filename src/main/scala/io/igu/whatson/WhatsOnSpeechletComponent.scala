@@ -5,14 +5,14 @@ import com.amazon.speech.json.SpeechletRequestEnvelope
 import com.amazon.speech.speechlet.{IntentRequest, LaunchRequest, SessionEndedRequest, SessionStartedRequest, SpeechletResponse, _}
 import com.amazon.speech.ui.{OutputSpeech, PlainTextOutputSpeech, Reprompt, SimpleCard}
 import com.typesafe.scalalogging.LazyLogging
-import io.igu.meetup.v2.ConciergeClientComponent
+import io.igu.meetup.v3.StatusClientComponent
 
 trait WhatsOnSpeechletComponent {
 
   val whatsOnSpeechlet: WhatsOnSpeechlet
 
   trait WhatsOnSpeechlet extends LazyLogging with SpeechletV2 {
-    self: ConciergeClientComponent =>
+    self: StatusClientComponent =>
 
 
     def onSessionStarted(requestEnvelope: SpeechletRequestEnvelope[SessionStartedRequest]): Unit = {
@@ -33,6 +33,7 @@ trait WhatsOnSpeechletComponent {
 
       intentName map {
         case "HelloWorldIntent"  => getHelloResponse
+        case "WATSON.Status"     => getStatusResponse
         case "AMAZON.HelpIntent" => getHelloResponse
         case _                   => askResponse("HelloWorld", "This is unsupported. Please try something else.")
       } getOrElse askResponse("HelloWorld", "This is unsupported. Please try something else.")
@@ -47,6 +48,12 @@ trait WhatsOnSpeechletComponent {
     private def getWelcomeResponse = {
       val speechText = "Welcome to the Alexa Skills Kit, you can say hello"
       askResponse("HelloWorld", speechText)
+    }
+
+    private def getStatusResponse = {
+      val isHealthy = statusClient.status.isHealthy
+      val speechText = if (isHealthy) "Everything looks healthy" else "We are experiencing problems with Meetup at the moment"
+      askResponse("WATSON.Status", speechText)
     }
 
     private def getHelloResponse = {
@@ -94,7 +101,7 @@ trait WhatsOnSpeechletComponent {
 }
 
 object WhatsOnSpeechletComponent extends WhatsOnSpeechletComponent {
-  val whatsOnSpeechlet: WhatsOnSpeechlet = new WhatsOnSpeechlet with ConciergeClientComponent {
-    val conciergeClient: ConciergeClient = new ConciergeClient {}
+  val whatsOnSpeechlet: WhatsOnSpeechlet = new WhatsOnSpeechlet with StatusClientComponent {
+    override val statusClient: StatusClient = new StatusClient {}
   }
 }

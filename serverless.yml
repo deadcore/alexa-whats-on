@@ -63,6 +63,11 @@ custom:
                     - hello
                     - say hello
                     - hello world
+                  - name: WATSON.Status
+                    samples:
+                    - what the status is
+                    - if they are healthy
+                    - the status
 
 plugins:
   - serverless-plugin-tracing
