@@ -33,7 +33,7 @@ trait WhatsOnSpeechletComponent {
 
       intentName map {
         case "HelloWorldIntent"  => getHelloResponse
-        case "WATSON.Status"     => getStatusResponse
+        case "Status"     => getStatusResponse
         case "AMAZON.HelpIntent" => getHelloResponse
         case _                   => askResponse("HelloWorld", "This is unsupported. Please try something else.")
       } getOrElse askResponse("HelloWorld", "This is unsupported. Please try something else.")

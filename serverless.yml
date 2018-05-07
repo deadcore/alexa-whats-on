@@ -63,7 +63,7 @@ custom:
                     - hello
                     - say hello
                     - hello world
-                  - name: WATSON.Status
+                  - name: Status
                     samples:
                     - what the status is
                     - if they are healthy
