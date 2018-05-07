@@ -35,10 +35,12 @@ custom:
         skillManifest:
           publishingInformation:
             locales:
-              en-US:
-                name: test2
+              en-GB:
+                name: Whats on
           apis:
-            custom: {}
+            custom:
+              endpoint:
+                uri: arn:aws:lambda:eu-west-1:***REMOVED***:function:alexa-whats-on-production-whats-on
           manifestVersion: '1.0'
         models:
           en-US:
@@ -60,3 +62,4 @@ custom:
 
 plugins:
   - serverless-plugin-tracing
+  - serverless-alexa-skills
