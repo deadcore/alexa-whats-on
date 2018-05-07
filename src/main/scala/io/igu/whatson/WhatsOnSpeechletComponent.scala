@@ -32,8 +32,9 @@ trait WhatsOnSpeechletComponent {
       val intentName = if (intent != null) intent.getName else null
 
       intentName match {
-        case "HelloWorldIntent" || "AMAZON.HelpIntent" => getHelloResponse
-        case _                                         => askResponse("HelloWorld", "This is unsupported. Please try something else.")
+        case "HelloWorldIntent"  => getHelloResponse
+        case "AMAZON.HelpIntent" => getHelloResponse
+        case _                   => askResponse("HelloWorld", "This is unsupported. Please try something else.")
       }
 
     }
