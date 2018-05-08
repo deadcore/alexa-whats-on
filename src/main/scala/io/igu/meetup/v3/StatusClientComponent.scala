@@ -11,7 +11,8 @@ trait StatusClientComponent {
   trait StatusClient {
 
     def status: Status = {
-      val response = Http("https://api.meetup.com/status").asString
+      val response = Http("https://api.meetup.com/status").
+        asString
 
       response.as[Status].body
     }

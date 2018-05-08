@@ -16,9 +16,9 @@ libraryDependencies ++= Seq(
   "org.scalaj" %% "scalaj-http" % "2.4.0",
   "com.amazon.alexa" % "alexa-skills-kit" % "1.8.1",
   "com.amazonaws" % "aws-lambda-java-log4j2" % "1.1.0",
-  "org.apache.logging.log4j" % "log4j-core" % "2.11.0",
-  "org.apache.logging.log4j" % "log4j-api" % "2.11.0",
-  "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.11.0",
+  "log4j" % "log4j" % "1.2.17",
+  "org.slf4j" % "slf4j-api"% "1.7.0",
+  "org.slf4j" % "slf4j-log4j12" % "1.7.0",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
 )
 

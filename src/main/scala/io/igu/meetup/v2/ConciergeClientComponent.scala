@@ -9,8 +9,10 @@ trait ConciergeClientComponent {
   val conciergeClient: ConciergeClient
 
   trait ConciergeClient {
-    def concierge: MeetupResponse[List[Event]] = {
-      val response = Http("https://api.meetup.com/2/events").asString
+    def concierge(accessToken: String): MeetupResponse[List[Event]] = {
+      val response = Http("https://api.meetup.com/2/events").
+        header("Authorization", s"Bearer $accessToken").
+        asString
 
       response.as[MeetupResponse[List[Event]]].body
     }
