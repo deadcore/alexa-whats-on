@@ -15,17 +15,15 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-parser" % circeVersion,
   "org.scalaj" %% "scalaj-http" % "2.4.0",
   "com.amazon.alexa" % "alexa-skills-kit" % "1.8.1",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
-  "org.apache.logging.log4j" % "log4j-core" % "2.11.0",
-  "org.apache.logging.log4j" % "log4j-api" % "2.11.0",
-  "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.11.0"
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
 ).map(_.
-  exclude("org.slf4j", "slf4j-jdk14").
-  exclude("org.slf4j", "slf4j-nop").
+  exclude("org.slf4j", "slf4j-jdk14")
+  exclude("org.slf4j", "slf4j-nop")
   exclude("org.slf4j", "slf4j-log4j12")
 ) ++ Seq(
   "ch.qos.logback" % "logback-core" % "1.2.1",
-  "ch.qos.logback" % "logback-classic" % "1.2.1"
+  "ch.qos.logback" % "logback-classic" % "1.2.1",
+  "org.slf4j" % "log4j-over-slf4j" % "1.7.25"
 )
 
 // Assembly config
