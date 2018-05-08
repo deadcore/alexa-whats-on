@@ -50,7 +50,7 @@ custom:
           en-GB:
             interactionModel:
               languageModel:
-                invocationName: whats on
+                invocationName: watson
                 intents:
                   - name: AMAZON.CancelIntent
                     samples: []
