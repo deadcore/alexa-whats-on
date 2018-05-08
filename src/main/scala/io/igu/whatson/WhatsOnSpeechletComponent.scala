@@ -2,6 +2,7 @@ package io.igu.whatson
 
 
 import com.amazon.speech.json.SpeechletRequestEnvelope
+import com.amazon.speech.speechlet.SpeechletResponse.newAskResponse
 import com.amazon.speech.speechlet.{IntentRequest, LaunchRequest, SessionEndedRequest, SessionStartedRequest, SpeechletResponse, _}
 import com.amazon.speech.ui.{OutputSpeech, PlainTextOutputSpeech, Reprompt, SimpleCard}
 import com.typesafe.scalalogging.LazyLogging
@@ -22,7 +23,7 @@ trait WhatsOnSpeechletComponent {
 
     def onLaunch(requestEnvelope: SpeechletRequestEnvelope[LaunchRequest]): SpeechletResponse = {
       logger.info("onLaunch requestId={}, sessionId={}", requestEnvelope.getRequest.getRequestId, requestEnvelope.getSession.getSessionId)
-      getWelcomeResponse
+      welcomeResponse
     }
 
     def onIntent(requestEnvelope: SpeechletRequestEnvelope[IntentRequest]): SpeechletResponse = {
@@ -37,12 +38,12 @@ trait WhatsOnSpeechletComponent {
       // any cleanup logic goes here
     }
 
-    private def getWelcomeResponse = {
+    private def welcomeResponse = {
       val speechText = "Welcome to the Alexa Skills Kit, you can say hello"
       askResponse("HelloWorld", speechText)
     }
 
-    private def getSimpleCard(title: String, content: String) = {
+    private def simpleCard(title: String, content: String): SimpleCard = {
       val card = new SimpleCard
       card.setTitle(title)
       card.setContent(content)
@@ -55,17 +56,16 @@ trait WhatsOnSpeechletComponent {
       speech
     }
 
-    private def getReprompt(outputSpeech: OutputSpeech) = {
+    private def reprompt(outputSpeech: OutputSpeech) = {
       val reprompt = new Reprompt
       reprompt.setOutputSpeech(outputSpeech)
       reprompt
     }
 
     private def askResponse(cardTitle: String, speechText: String) = {
-      val card = getSimpleCard(cardTitle, speechText)
+      val card = simpleCard(cardTitle, speechText)
       val speech = getPlainTextOutputSpeech(speechText)
-      val reprompt = getReprompt(speech)
-      SpeechletResponse.newAskResponse(speech, reprompt, card)
+      newAskResponse(speech, reprompt(speech), card)
     }
 
 
