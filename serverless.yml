@@ -68,6 +68,11 @@ custom:
                     - what the status is
                     - if they are healthy
                     - the status
+                  - name: FindWhatsOn
+                    samples:
+                    - whats on
+                    - if there is anything good on
+                    - whats on near me
 
 plugins:
   - serverless-plugin-tracing

@@ -1,5 +1,6 @@
 package io.igu.whatson
 
+import com.amazon.speech.json.SpeechletRequestEnvelope
 import com.amazon.speech.speechlet.{IntentRequest, SpeechletResponse}
 import com.amazon.speech.ui.{OutputSpeech, PlainTextOutputSpeech, Reprompt, SimpleCard}
 import io.igu.whatson.Intent.Receiver
@@ -8,14 +9,23 @@ trait Intent {
 
   def receive: Receiver
 
-  def apply(speechletRequest: IntentRequest): SpeechletResponse = {
-    val maybeIntent = Option(speechletRequest.getIntent)
+  private var speechletRequest: SpeechletRequestEnvelope[IntentRequest] = _
 
-    maybeIntent.map(_.getName) match {
+  def request: Option[SpeechletRequestEnvelope[IntentRequest]] = Option(speechletRequest)
+
+  def apply(speechletRequest: SpeechletRequestEnvelope[IntentRequest]): SpeechletResponse = {
+    val maybeIntent = Option(speechletRequest.getRequest.getIntent)
+
+    this.speechletRequest = speechletRequest
+
+    val response = maybeIntent.map(_.getName) match {
       case Some(intent) if receive.isDefinedAt(intent) => receive(intent)
       case _                                           => askResponse("HelloWorld", "This is unsupported. Please try something else.")
     }
 
+    this.speechletRequest = null
+
+    response
   }
 
   def :+(right: Intent): Intent = {

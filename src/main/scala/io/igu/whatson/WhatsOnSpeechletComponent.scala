@@ -6,8 +6,9 @@ import com.amazon.speech.speechlet.SpeechletResponse.newAskResponse
 import com.amazon.speech.speechlet.{IntentRequest, LaunchRequest, SessionEndedRequest, SessionStartedRequest, SpeechletResponse, _}
 import com.amazon.speech.ui.{OutputSpeech, PlainTextOutputSpeech, Reprompt, SimpleCard}
 import com.typesafe.scalalogging.LazyLogging
+import io.igu.meetup.v2.ConciergeClientComponent
 import io.igu.meetup.v3.StatusClientComponent
-import io.igu.whatson.intents.{HelloWorldIntentComponent, StatusIntentComponent}
+import io.igu.whatson.intents.{FindWhatsOnIntentComponent, HelloWorldIntentComponent, StatusIntentComponent}
 
 trait WhatsOnSpeechletComponent {
 
@@ -30,7 +31,7 @@ trait WhatsOnSpeechletComponent {
       val request = requestEnvelope.getRequest
       logger.info("onIntent requestId={}, sessionId={}", request.getRequestId, requestEnvelope.getSession.getSessionId)
 
-      intent(request)
+      intent(requestEnvelope)
     }
 
     def onSessionEnded(requestEnvelope: SpeechletRequestEnvelope[SessionEndedRequest]): Unit = {
@@ -73,14 +74,16 @@ trait WhatsOnSpeechletComponent {
 
 }
 
-object WhatsOnSpeechletComponent extends WhatsOnSpeechletComponent with StatusClientComponent with StatusIntentComponent with HelloWorldIntentComponent {
+object WhatsOnSpeechletComponent extends WhatsOnSpeechletComponent with StatusClientComponent with StatusIntentComponent with HelloWorldIntentComponent with FindWhatsOnIntentComponent {
 
   override val statusIntent: StatusIntent = new StatusIntent {}
   override val helloWorldIntent: HelloWorldIntent = new HelloWorldIntent {}
   override val statusClient: StatusClient = new StatusClient {}
-
-  val whatsOnSpeechlet: WhatsOnSpeechlet = new WhatsOnSpeechlet {
-    override val intent: Intent = statusIntent :+ helloWorldIntent
+  override val findWhatsOnIntent: FindWhatsOnIntent = new FindWhatsOnIntent with ConciergeClientComponent {
+    override val conciergeClient: ConciergeClient = new ConciergeClient {}
   }
 
+  override val whatsOnSpeechlet: WhatsOnSpeechlet = new WhatsOnSpeechlet {
+    override val intent: Intent = statusIntent :+ helloWorldIntent :+ findWhatsOnIntent
+  }
 }
