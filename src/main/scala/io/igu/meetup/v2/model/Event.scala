@@ -8,11 +8,11 @@ import io.circe.{Decoder, Encoder}
 
 
 case class Event(utc_offset: Int,
-                 venue: Venue,
+                 venue: Option[Venue],
                  headcount: Int,
                  visibility: String,
                  waitlist_count: Int,
-                 created: Int,
+                 created: Long,
                  maybe_rsvp_count: Int,
                  description: String,
                  event_url: String,
@@ -20,14 +20,14 @@ case class Event(utc_offset: Int,
                  duration: Int,
                  name: String,
                  id: String,
-                 photo_url: String,
-                 time: Int,
-                 updated: Int,
+                 photo_url: Option[String],
+                 time: Long,
+                 updated: Long,
                  group: Group,
                  status: String,
-                 rsvp_limit: Int,
-                 how_to_find_us: String,
-                 fee: Fee)
+                 rsvp_limit: Option[Int],
+                 how_to_find_us: Option[String],
+                 fee: Option[Fee])
 
 object Event {
   implicit val encoder: Encoder[Event] = deriveEncoder[Event]

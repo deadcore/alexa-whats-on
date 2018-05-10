@@ -13,6 +13,7 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-core" % circeVersion,
   "io.circe" %% "circe-generic" % circeVersion,
   "io.circe" %% "circe-parser" % circeVersion,
+  "io.circe" %% "circe-generic-extras" % circeVersion,
   "org.scalaj" %% "scalaj-http" % "2.4.0",
   "com.amazon.alexa" % "alexa-skills-kit" % "1.8.1",
   "com.amazonaws" % "aws-lambda-java-log4j2" % "1.1.0",

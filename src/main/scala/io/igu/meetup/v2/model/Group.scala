@@ -4,7 +4,7 @@ import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
 
 case class Group(join_mode: String,
-                 created: Int,
+                 created: Long,
                  name: String,
                  group_lon: Double,
                  id: Int,

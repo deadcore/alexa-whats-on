@@ -1,7 +1,7 @@
 package io.igu.meetup.v2.model
 
-import io.circe.{Decoder, Encoder}
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
+import io.circe.{Decoder, Encoder}
 
 case class Metadata(next: String,
                     method: String,
@@ -12,9 +12,9 @@ case class Metadata(next: String,
                     lon: String,
                     title: String,
                     url: String,
-                    signed_url: String,
+                    signed_url: Option[String],
                     id: String,
-                    updated: Int,
+                    updated: Long,
                     lat: String)
 
 object Metadata {
