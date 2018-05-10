@@ -3,13 +3,9 @@ package io.igu.meetup.v2.model
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.{Decoder, Encoder}
 
-
-
-
-
 case class Event(utc_offset: Int,
                  venue: Option[Venue],
-                 headcount: Int,
+                 headcount: Option[Int],
                  visibility: String,
                  waitlist_count: Int,
                  created: Long,
