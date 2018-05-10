@@ -3,7 +3,7 @@ package io.igu.whatson.intents
 import com.amazon.speech.json.SpeechletRequestEnvelope
 import com.amazon.speech.speechlet.{IntentRequest, User}
 import io.igu.meetup.v2.ConciergeClientComponent
-import io.igu.meetup.v2.model.Event
+import io.igu.meetup.v2.model.{ConciergeRequest, Event}
 import io.igu.whatson.{Intent, ResponseSupport}
 
 trait FindWhatsOnIntentComponent {
@@ -29,7 +29,7 @@ trait FindWhatsOnIntentComponent {
       map(_.getSession).
       map(_.getUser)
 
-    private def findEvents(token: String): List[Event] = conciergeClient.concierge(token).results
+    private def findEvents(token: String): List[Event] = conciergeClient.concierge(ConciergeRequest(city = Some("London")), token).results
 
   }
 
