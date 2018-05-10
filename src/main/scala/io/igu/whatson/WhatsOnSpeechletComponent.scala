@@ -2,9 +2,7 @@ package io.igu.whatson
 
 
 import com.amazon.speech.json.SpeechletRequestEnvelope
-import com.amazon.speech.speechlet.SpeechletResponse.newAskResponse
 import com.amazon.speech.speechlet.{IntentRequest, LaunchRequest, SessionEndedRequest, SessionStartedRequest, SpeechletResponse, _}
-import com.amazon.speech.ui.{OutputSpeech, PlainTextOutputSpeech, Reprompt, SimpleCard}
 import com.typesafe.scalalogging.LazyLogging
 import io.igu.meetup.v2.ConciergeClientComponent
 import io.igu.meetup.v3.StatusClientComponent
@@ -31,7 +29,10 @@ trait WhatsOnSpeechletComponent {
       val request = requestEnvelope.getRequest
       logger.info("onIntent requestId={}, sessionId={}", request.getRequestId, requestEnvelope.getSession.getSessionId)
 
-      intent(requestEnvelope)
+      intent(requestEnvelope).getOrElse {
+        val speechText = "I'm sorry I don't know what to say to that"
+        ResponseSupport.askResponse("Error", speechText)
+      }
     }
 
     def onSessionEnded(requestEnvelope: SpeechletRequestEnvelope[SessionEndedRequest]): Unit = {
@@ -41,49 +42,24 @@ trait WhatsOnSpeechletComponent {
 
     private def welcomeResponse = {
       val speechText = "Welcome to the Alexa Skills Kit, you can say hello"
-      askResponse("HelloWorld", speechText)
+      ResponseSupport.askResponse("HelloWorld", speechText)
     }
-
-    private def simpleCard(title: String, content: String): SimpleCard = {
-      val card = new SimpleCard
-      card.setTitle(title)
-      card.setContent(content)
-      card
-    }
-
-    private def getPlainTextOutputSpeech(speechText: String) = {
-      val speech = new PlainTextOutputSpeech
-      speech.setText(speechText)
-      speech
-    }
-
-    private def reprompt(outputSpeech: OutputSpeech) = {
-      val reprompt = new Reprompt
-      reprompt.setOutputSpeech(outputSpeech)
-      reprompt
-    }
-
-    private def askResponse(cardTitle: String, speechText: String) = {
-      val card = simpleCard(cardTitle, speechText)
-      val speech = getPlainTextOutputSpeech(speechText)
-      newAskResponse(speech, reprompt(speech), card)
-    }
-
 
   }
 
 }
 
-object WhatsOnSpeechletComponent extends WhatsOnSpeechletComponent with StatusClientComponent with StatusIntentComponent with HelloWorldIntentComponent with FindWhatsOnIntentComponent {
+object WhatsOnSpeechletComponent extends WhatsOnSpeechletComponent with StatusIntentComponent with HelloWorldIntentComponent with FindWhatsOnIntentComponent {
 
-  override val statusIntent: StatusIntent = new StatusIntent {}
+  override val statusIntent: StatusIntent = new StatusIntent with StatusClientComponent {
+    val statusClient: StatusClient = new StatusClient {}
+  }
   override val helloWorldIntent: HelloWorldIntent = new HelloWorldIntent {}
-  override val statusClient: StatusClient = new StatusClient {}
   override val findWhatsOnIntent: FindWhatsOnIntent = new FindWhatsOnIntent with ConciergeClientComponent {
     override val conciergeClient: ConciergeClient = new ConciergeClient {}
   }
 
   override val whatsOnSpeechlet: WhatsOnSpeechlet = new WhatsOnSpeechlet {
-    override val intent: Intent = statusIntent :+ helloWorldIntent :+ findWhatsOnIntent
+    override val intent: Intent = statusIntent.status ++ helloWorldIntent.helloWorld ++ findWhatsOnIntent.findWhatsOn
   }
 }
