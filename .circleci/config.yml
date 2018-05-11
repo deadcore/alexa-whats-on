@@ -55,6 +55,7 @@ jobs:
             tar -xvzf ./serverless.tar.gz
       - run: npm install
       - run:
+          context: igu-io-production
           name: Deploy to Development
           command: npm run deploy
 
