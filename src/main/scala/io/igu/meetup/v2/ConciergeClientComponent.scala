@@ -14,7 +14,7 @@ trait ConciergeClientComponent {
   trait ConciergeClient extends LazyLogging {
     private implicit val config: Configuration = Configuration.default.withSnakeCaseMemberNames
 
-    def concierge(request: ConciergeRequest, accessToken: String): MeetupResponse[List[Event]] = {
+    def concierge(request: ConciergeRequest, accessToken: String): MeetupResponse[Seq[Event]] = {
       logger.info("Sending request to [https://api.meetup.com/2/concierge] with access token [{}]", accessToken)
       val response = Http("https://api.meetup.com/2/concierge").
         params(request.flatternToMap).
@@ -24,7 +24,7 @@ trait ConciergeClientComponent {
       logger.info("Got response from [https://api.meetup.com/2/concierge]: [{}]", response.body)
 
       response.code match {
-        case 200 => response.as[MeetupResponse[List[Event]]].body
+        case 200 => response.as[MeetupResponse[Seq[Event]]].body
         case _   => throw responseAsException(response)
       }
     }
