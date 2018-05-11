@@ -6,7 +6,9 @@ import com.amazon.speech.speechlet.{IntentRequest, LaunchRequest, SessionEndedRe
 import com.typesafe.scalalogging.LazyLogging
 import io.igu.meetup.v2.ConciergeClientComponent
 import io.igu.meetup.v3.StatusClientComponent
+import io.igu.meetup.v3.member.ProfileClientComponent
 import io.igu.whatson.intents.{FindWhatsOnIntentComponent, HelloWorldIntentComponent, StatusIntentComponent}
+import io.igu.whatson.services.WhatsOnServiceComponent
 
 trait WhatsOnSpeechletComponent {
 
@@ -49,14 +51,21 @@ trait WhatsOnSpeechletComponent {
 
 }
 
-object WhatsOnSpeechletComponent extends WhatsOnSpeechletComponent with StatusIntentComponent with HelloWorldIntentComponent with FindWhatsOnIntentComponent {
+object WhatsOnSpeechletComponent extends WhatsOnSpeechletComponent with StatusIntentComponent
+  with HelloWorldIntentComponent with FindWhatsOnIntentComponent {
+  self =>
 
   override val statusIntent: StatusIntent = new StatusIntent with StatusClientComponent {
-    val statusClient: StatusClient = new StatusClient {}
+    override val statusClient: StatusClient = new StatusClient {}
   }
+
   override val helloWorldIntent: HelloWorldIntent = new HelloWorldIntent {}
-  override val findWhatsOnIntent: FindWhatsOnIntent = new FindWhatsOnIntent with ConciergeClientComponent {
-    override val conciergeClient: ConciergeClient = new ConciergeClient {}
+
+  override val findWhatsOnIntent: FindWhatsOnIntent = new FindWhatsOnIntent with WhatsOnServiceComponent {
+    override val whatsOnService: WhatsOnService = new WhatsOnService with ProfileClientComponent with ConciergeClientComponent {
+      override val profileClient: ProfileClient = new ProfileClient {}
+      override val conciergeClient: ConciergeClient = new ConciergeClient {}
+    }
   }
 
   override val whatsOnSpeechlet: WhatsOnSpeechlet = new WhatsOnSpeechlet {

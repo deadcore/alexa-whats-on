@@ -2,8 +2,8 @@ package io.igu.whatson.intents
 
 import com.amazon.speech.json.SpeechletRequestEnvelope
 import com.amazon.speech.speechlet.{IntentRequest, User}
-import io.igu.meetup.v2.ConciergeClientComponent
-import io.igu.meetup.v2.model.{ConciergeRequest, Event}
+import io.igu.meetup.v2.model.Event
+import io.igu.whatson.services.WhatsOnServiceComponent
 import io.igu.whatson.{Intent, ResponseSupport}
 
 trait FindWhatsOnIntentComponent {
@@ -11,7 +11,7 @@ trait FindWhatsOnIntentComponent {
   val findWhatsOnIntent: FindWhatsOnIntent
 
   trait FindWhatsOnIntent {
-    self: ConciergeClientComponent =>
+    self: WhatsOnServiceComponent =>
 
     def findWhatsOn: Intent = Intent.withRequest { request: SpeechletRequestEnvelope[IntentRequest] => {
       case "FindWhatsOn" =>
@@ -29,7 +29,7 @@ trait FindWhatsOnIntentComponent {
       map(_.getSession).
       map(_.getUser)
 
-    private def findEvents(token: String): List[Event] = conciergeClient.concierge(ConciergeRequest(city = Some("London")), token).results
+    private def findEvents(token: String): Seq[Event] = self.whatsOnService.eventsInUsersArea(token)
 
   }
 
