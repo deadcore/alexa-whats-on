@@ -43,6 +43,7 @@ jobs:
             - serverless.tar.gz
 
   deploy:
+    context: igu-io-production
     docker:
       - image: circleci/node:8
     steps:
@@ -55,8 +56,7 @@ jobs:
             tar -xvzf ./serverless.tar.gz
       - run: npm install
       - run:
-          context: igu-io-production
-          name: Deploy to Development
+          name: Deploy
           command: npm run deploy
 
 workflows:
